@@ -1,6 +1,7 @@
 {
   "name": "airbnb-calendar-blocker",
   "version": "1.0.0",
+  "type": "module",
   "dependencies": {
     "node-ical": "^0.15.0",
     "node-fetch": "^3.3.1"
