@@ -1,5 +1,5 @@
-const ical = require("node-ical");
-const fetch = require("node-fetch"); // Use node-fetch for HTTP requests
+import ical from "node-ical";
+import fetch from "node-fetch";
 
 let cachedBlockedDates = [];
 let lastFetchedTime = null;
@@ -8,16 +8,13 @@ const ICAL_URL = "https://www.airbnb.no/calendar/ical/20958160.ics?s=1d31d8f1b85
 
 async function fetchBlockedDates() {
   try {
-    // Fetch the iCal content from the Airbnb URL
     const response = await fetch(ICAL_URL);
     if (!response.ok) {
       throw new Error(`Failed to fetch iCal: ${response.statusText}`);
     }
-    const icalData = await response.text(); // Get the iCal data as text
+    const icalData = await response.text();
 
-    // Parse the iCal data
     const data = ical.parseICS(icalData);
-
     const blockedDates = [];
     for (let key in data) {
       if (data[key].type === "VEVENT") {
@@ -25,7 +22,7 @@ async function fetchBlockedDates() {
         const end = new Date(data[key].end);
 
         for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-          blockedDates.push(new Date(d).toISOString().split("T")[0]); // ISO format: YYYY-MM-DD
+          blockedDates.push(new Date(d).toISOString().split("T")[0]);
         }
       }
     }
@@ -37,7 +34,7 @@ async function fetchBlockedDates() {
   }
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const now = Date.now();
 
   if (!lastFetchedTime || now - lastFetchedTime > CACHE_DURATION) {
