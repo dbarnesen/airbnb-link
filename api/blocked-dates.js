@@ -8,24 +8,28 @@ const ICAL_URL = "https://www.airbnb.no/calendar/ical/20958160.ics?s=1d31d8f1b85
 
 async function fetchBlockedDates() {
   try {
+    console.log("Fetching iCal from Airbnb...");
     const response = await fetch(ICAL_URL);
     if (!response.ok) {
       throw new Error(`Failed to fetch iCal: ${response.statusText}`);
     }
     const icalData = await response.text();
 
+    // Parse the iCal data
     const data = ical.parseICS(icalData);
-
-    console.log("Parsed iCal Data:", data); // Log parsed data
 
     const blockedDates = [];
     for (let key in data) {
-      if (data[key].type === "VEVENT") {
-        const start = new Date(data[key].start);
-        const end = new Date(data[key].end);
+      const event = data[key];
 
+      // Ensure this is a VEVENT with DTSTART and DTEND
+      if (event.type === "VEVENT" && event.start && event.end) {
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+
+        // Iterate over the range and add each date
         for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-          blockedDates.push(new Date(d).toISOString().split("T")[0]);
+          blockedDates.push(new Date(d).toISOString().split("T")[0]); // ISO format: YYYY-MM-DD
         }
       }
     }
@@ -37,6 +41,7 @@ async function fetchBlockedDates() {
     return [];
   }
 }
+
 
 
 export default async (req, res) => {
