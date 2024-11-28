@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 let cachedBlockedDates = [];
 let lastFetchedTime = null;
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
-const ICAL_URL = "https://www.airbnb.no/calendar/ical/20958160.ics?s=1d31d8f1b8556a4e4af802bfaeabc207";
+const ICAL_URL = "https://raw.githubusercontent.com/dbarnesen/airbnb-link/refs/heads/main/listing-20958160.ics?token=GHSAT0AAAAAAC2YEIHQCJAYSKT3UGNW3BVQZ2IJQ4A";
 
 async function fetchBlockedDates() {
   try {
