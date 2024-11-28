@@ -1,7 +1,7 @@
 import ical from "node-ical";
 import fetch from "node-fetch";
 
-const ICAL_URL = "https://raw.githubusercontent.com/dbarnesen/airbnb-link/refs/heads/main/listing-20958160.ics?token=GHSAT0AAAAAAC2YEIHQK6ULVAZ7SXCBERBMZ2IJVFQ";
+const ICAL_URL = "https://raw.githubusercontent.com/dbarnesen/airbnb-link/refs/heads/main/listing-20958160.ics";
 
 async function fetchBlockedDates() {
   try {
