@@ -1,6 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/no.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
     try {
       // Fetch blocked dates
       const response = await fetch("https://airbnb-link-eight.vercel.app/api/blocked-dates");
@@ -48,4 +46,3 @@
       console.error("Error initializing Flatpickr:", error);
     }
   });
-</script>
