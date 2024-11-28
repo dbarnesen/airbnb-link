@@ -1,9 +1,6 @@
 import ical from "node-ical";
 import fetch from "node-fetch";
 
-let cachedBlockedDates = [];
-let lastFetchedTime = null;
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const ICAL_URL = "https://raw.githubusercontent.com/dbarnesen/airbnb-link/refs/heads/main/listing-20958160.ics?token=GHSAT0AAAAAAC2YEIHQCJAYSKT3UGNW3BVQZ2IJQ4A";
 
 async function fetchBlockedDates() {
@@ -33,18 +30,18 @@ async function fetchBlockedDates() {
 }
 
 export default async (req, res) => {
-  const now = Date.now();
+  try {
+    console.log("Fetching updated blocked dates (no caching)...");
+    const blockedDates = await fetchBlockedDates();
 
-  // Allow only one fetch per cache duration
-  if (!lastFetchedTime || now - lastFetchedTime > CACHE_DURATION) {
-    cachedBlockedDates = await fetchBlockedDates();
-    lastFetchedTime = now;
+    // Set CORS headers
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins or specify your domain
+    res.setHeader("Access-Control-Allow-Methods", "GET");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    res.status(200).json({ blockedDates });
+  } catch (error) {
+    console.error("Error in API handler:", error);
+    res.status(500).json({ error: "Failed to fetch blocked dates" });
   }
-
-  // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins or specify your domain
-  res.setHeader("Access-Control-Allow-Methods", "GET");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  res.status(200).json({ blockedDates: cachedBlockedDates });
 };
