@@ -50,13 +50,7 @@ async function fetchBlockedDates() {
 
 
 export default async (req, res) => {
-  const now = Date.now();
-
-  if (!lastFetchedTime || now - lastFetchedTime > CACHE_DURATION) {
-    console.log("Fetching updated blocked dates...");
-    cachedBlockedDates = await fetchBlockedDates();
-    lastFetchedTime = now;
-  }
-
-  res.status(200).json({ blockedDates: cachedBlockedDates });
+  console.log("Fetching updated blocked dates (bypassing cache)...");
+  const blockedDates = await fetchBlockedDates();
+  res.status(200).json({ blockedDates });
 };
