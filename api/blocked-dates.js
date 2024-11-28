@@ -15,6 +15,9 @@ async function fetchBlockedDates() {
     const icalData = await response.text();
 
     const data = ical.parseICS(icalData);
+
+    console.log("Parsed iCal Data:", data); // Log parsed data
+
     const blockedDates = [];
     for (let key in data) {
       if (data[key].type === "VEVENT") {
@@ -27,12 +30,14 @@ async function fetchBlockedDates() {
       }
     }
 
+    console.log("Blocked Dates:", blockedDates); // Log blocked dates
     return blockedDates;
   } catch (error) {
     console.error("Error fetching or parsing iCal:", error);
     return [];
   }
 }
+
 
 export default async (req, res) => {
   const now = Date.now();
