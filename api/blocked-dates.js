@@ -11,10 +11,18 @@ const CACHE_DURATION = 1000 * 60 * 60; // Cache for 1 hour (in milliseconds)
 // Fetch blocked dates from Airbnb
 async function fetchBlockedDates() {
   try {
-    const response = await fetch(ICAL_URL);
+    const response = await fetch(ICAL_URL, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "text/calendar",
+      },
+    });
+
     if (!response.ok) {
       throw new Error(`Failed to fetch iCal: ${response.statusText}`);
     }
+
     const icalData = await response.text();
     const data = ical.parseICS(icalData);
 
@@ -24,8 +32,6 @@ async function fetchBlockedDates() {
       if (event.type === "VEVENT" && event.start && event.end) {
         const start = new Date(event.start);
         const end = new Date(event.end);
-
-        // Push each day in the range to the blockedDates array
         for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
           blockedDates.push(new Date(d).toISOString().split("T")[0]);
         }
